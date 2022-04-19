@@ -7,20 +7,15 @@ import {RootStackParamList} from '../../types';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {MainBottomTabParamList} from '../../types';
 
-type HomeScreenProp = CompositeNavigationProp<
-  StackNavigationProp<RootStackParamList, 'Main'>,
-  BottomTabNavigationProp<MainBottomTabParamList, 'Home'>
->;
 
-function HomeScreen() {
-  const navigation = useNavigation<HomeScreenProp>();
+
+export default function HomeScreen() {
+
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
-      <Button title="Login" onPress={() => navigation.navigate('Landing')} />
     </View>
   );
 }
 
-export default HomeScreen;

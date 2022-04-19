@@ -15,11 +15,51 @@ import * as Location from 'expo-location';
 
 const screenWidth = Dimensions.get("screen").width;
 
+
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../types'
+
+
+
+
+
+
+type RequestLocationScreenScreenProp = StackNavigationProp<RootStackParamList, 'RequestLocation'>;
+
+
+
+
 export default function RequestLocationScreen() {
 
+    const navigation = useNavigation<RequestLocationScreenScreenProp>();
     const [errorMsg, setErrorMsg] = useState("")
-    const [address, setAddress] = useState()
+    const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
 
+    useEffect(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location: any = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+          
+          setTimeout(() => {
+            navigation.navigate('Main')
+          }, 2000)        
+        })();
+      }, []);
+
+
+      let text = 'Waiting for location permission..';
+      if (errorMsg) {
+        text = errorMsg;
+      } else if (location) {
+        text = "Welcome!";
+      }
 
   return (
     <View style={styles.container}>
@@ -33,7 +73,8 @@ export default function RequestLocationScreen() {
           style={styles.splashIcon}
         ></Image>
 
-        <Text>Allow Location</Text>
+        <Text> {text}</Text>
+
 
         <View style={styles.flagcontainer}>
             <Image
@@ -43,12 +84,11 @@ export default function RequestLocationScreen() {
         </View>
       </View>
 
-      {/* <Button
-        onPress={() => navigate("HomeStack")}
-        title="Continue"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      /> */}
+
+
+
+
+
 
       <View style={styles.footer}>
         <Text>Footer</Text>

@@ -8,20 +8,22 @@ import { useNavigation } from "@react-navigation/native";
 
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from './HomeScreen';
+
 import {MainBottomTabParamList} from '../../types';
 import MapScreen from './MapScreen';
 
-type mainScreenProp = StackNavigationProp<RootStackParamList, "Main">;
+// import HomeScreen from './HomeScreen';
+
+
 
 const BottomTab = createBottomTabNavigator<MainBottomTabParamList>();
 
 export default function MainScreen() {
-  const navigation = useNavigation<mainScreenProp>();
+
   
   return (
     <BottomTab.Navigator>
-      <BottomTab.Screen name="Home" component={HomeScreen} />
+      {/* <BottomTab.Screen name="Home" component={HomeScreen} />  */}
       <BottomTab.Screen name="Map" component={MapScreen} />
     </BottomTab.Navigator>
   );

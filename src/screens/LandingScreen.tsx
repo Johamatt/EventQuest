@@ -86,7 +86,7 @@ export default function LandingScreen() {
       </View>
 
       <Button
-        disabled={language === ''}
+         disabled={language === ''}
         onPress={() => navigation.push("RequestLocation")}
         title="Continue"
         color="#841584"
