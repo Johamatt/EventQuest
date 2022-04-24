@@ -11,6 +11,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {MainBottomTabParamList} from '../../types';
 import MapScreen from './MapScreen';
+import HomeScreen from "./Homescreen";
 
 // import HomeScreen from './HomeScreen';
 
@@ -23,8 +24,10 @@ export default function MainScreen() {
   
   return (
     <BottomTab.Navigator>
-      {/* <BottomTab.Screen name="Home" component={HomeScreen} />  */}
-      <BottomTab.Screen name="Map" component={MapScreen} />
+      <BottomTab.Screen name="Home" component={HomeScreen} />  
+      <BottomTab.Screen name="Map" component={MapScreen} options={{
+    headerShown: false
+}} />
     </BottomTab.Navigator>
   );
 }

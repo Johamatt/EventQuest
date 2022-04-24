@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Landing: undefined;
-  RequestLocation: undefined;
+  LoadingScreen: undefined;
   Main: undefined;
 };
 

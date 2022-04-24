@@ -15,20 +15,29 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../types'
 
-
+import { connect } from "react-redux";
+import { ON_UPDATE_LOCATION,ON_UPDATE_LANGUAGE, UserState, ApplicationState } from "../redux";
 
 
 const screenWidth = Dimensions.get("screen").width;
 
 type landingScreenProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
-export default function LandingScreen() {
+interface LandingProps {
+    userReducer: UserState,
+    ON_UPDATE_LANGUAGE: Function
+    
+}
 
+const _LandingScreen: React.FC<LandingProps> = (props) => {
+
+    const {userReducer, ON_UPDATE_LANGUAGE} = props
     const navigation = useNavigation<landingScreenProp>();
     const [language, setLanguage] = useState('')
-
-    
     const [selected, setSelected] = useState(false)
+
+
+    /// if ON_UPDATE_LANGUAGE != ''   => next
 
   return (
     <View style={styles.container}>
@@ -43,7 +52,7 @@ export default function LandingScreen() {
   
         ></Image>
 
-        <Text>Choose languange</Text>
+        <Text>Select languange</Text>
 
         <View style={styles.flagcontainer}>
           <TouchableOpacity 
@@ -87,7 +96,11 @@ export default function LandingScreen() {
 
       <Button
          disabled={language === ''}
-        onPress={() => navigation.push("RequestLocation")}
+        onPress={() => {navigation.push("LoadingScreen"), ON_UPDATE_LANGUAGE(language)}
+            
+            
+        
+        }
         title="Continue"
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
@@ -148,3 +161,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+
+const mapToStateProps = (state: ApplicationState) => ({
+    userReducer: state.UserReducer
+})
+
+const LandingScreen = connect(mapToStateProps, {ON_UPDATE_LANGUAGE})(_LandingScreen)
+
+export default LandingScreen
