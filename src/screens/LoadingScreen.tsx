@@ -46,7 +46,7 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
 
 
 
-  const {userReducer, ON_UPDATE_LOCATION, ON_UPDATE_EVENTS} = props
+  const { ON_UPDATE_LOCATION, ON_UPDATE_EVENTS} = props
 
   useEffect(() => {
     (async () => {

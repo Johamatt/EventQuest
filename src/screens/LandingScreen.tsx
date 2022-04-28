@@ -94,7 +94,7 @@ const _LandingScreen: React.FC<LandingProps> = (props) => {
 
       <Button
          disabled={language === ''}
-        onPress={() => {navigation.push("LoadingScreen"), ON_UPDATE_LANGUAGE(language)}
+         onPress={() => {navigation.push("LoadingScreen"), ON_UPDATE_LANGUAGE(language)}
             
             
         

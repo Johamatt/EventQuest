@@ -1,4 +1,5 @@
 import { LocationGeocodedLocation } from "expo-location";
+import { MomentInput } from "moment";
 
 
 export interface Event {
@@ -6,10 +7,10 @@ export interface Event {
   id: any;
 
   name: {
-    nameFi: String;
-    nameEn?: String;
-    nameSv?: String;
-    nameZh?: String;
+    fi?: String;
+    en?: String;
+    sv?: String;
+    sh?: String;
   }
 
   source_type: {
@@ -33,28 +34,28 @@ export interface Event {
       }
     };
 
-    description?: {
+    description: {
         intro: String,
         body: String,
 
-        images?: {
-            url: String,
-            copyright_holder: String
+        images: [
+            url: string | any,
+            copyright_holder: String,
+            media_id: Number,
             license_type: {
                 id: Number,
-                name: String
+                name: string
             }
-            media_id: Number
-        }
+        ]
     }
 
     tags?: {
         tag: [id: Number, name: String]
     }
-
-  event_dates?: {
-    startingDay: String;
-    endingDay: String;
+  
+  event_dates: {
+    starting_day: string | MomentInput ;
+    ending_day: string | MomentInput; 
     additional_description: any
   };
 }

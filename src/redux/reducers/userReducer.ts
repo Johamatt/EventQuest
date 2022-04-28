@@ -8,7 +8,7 @@ import { UserState } from '../models';
 const initialState: UserState = {
    
     location: {} as LocationGeocodedLocation,
-    language: new String,  // ????? new
+    language: new String,
     error: undefined
 }
 
