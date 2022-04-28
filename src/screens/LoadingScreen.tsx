@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   View,
@@ -6,21 +6,23 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Button,
-  TouchableOpacity,
-  Alert,
 } from "react-native";
+
+import BeatLoader from "react-spinners/BeatLoader";
 
 import * as Location from "expo-location";
 
 import { connect } from "react-redux";
-import { ON_UPDATE_LOCATION, ON_UPDATE_LANGUAGE, ON_UPDATE_EVENT, UserState, ApplicationState } from "../redux";
+import { ON_UPDATE_LOCATION, ON_UPDATE_LANGUAGE, ON_UPDATE_EVENTS, UserState, ApplicationState } from "../redux";
 
 const screenWidth = Dimensions.get("screen").width;
+
 
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
+
+
 
 type LoadingScreenProp = StackNavigationProp<
   RootStackParamList,
@@ -30,16 +32,21 @@ type LoadingScreenProp = StackNavigationProp<
 interface LoadingProps {
   userReducer: UserState,
   ON_UPDATE_LOCATION: Function,
-  ON_UPDATE_EVENT: Function
+  ON_UPDATE_EVENTS: Function
   
 }
+
+
+
 
 const _LoadingScreen: React.FC<LoadingProps> = (props) => {
   const navigation = useNavigation<LoadingScreenProp>();
   const [errorMsg, setErrorMsg] = useState("");
   const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
 
-  const {userReducer, ON_UPDATE_LOCATION, ON_UPDATE_EVENT} = props
+
+
+  const {userReducer, ON_UPDATE_LOCATION, ON_UPDATE_EVENTS} = props
 
   useEffect(() => {
     (async () => {
@@ -51,15 +58,8 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
       let location: any = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-
-      ON_UPDATE_LOCATION(location)
-
-      await ON_UPDATE_EVENT()
-
-
-      //       open-api.myhelsinki.fi/v1/events/
-
-
+      await ON_UPDATE_LOCATION(location)
+      await ON_UPDATE_EVENTS()
 
       setTimeout(() => {
         navigation.navigate("Main");
@@ -67,20 +67,17 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
     })();
   }, []);
 
-  
-
   let text = "Waiting for location permission..";
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
-    text = "Welcome!";
+    text = "Loading...";
   }
-
 
   return (
     <View style={styles.container}>
       <View style={styles.navigation}>
-        <Text>Navigation</Text>
+
       </View>
 
       <View style={styles.body}>
@@ -90,23 +87,18 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
         ></Image>
 
         <Text> {text}</Text>
-
+         <BeatLoader color={"#008080"} loading={true} css={""} size={34} /> 
+         {/* ^glitch */}
         <View style={styles.flagcontainer}>
-          <Image
-            source={require("../Images/LocationPin.png")}
-            style={styles.flagIcon}
-          />
         </View>
       </View>
 
       <View style={styles.footer}>
-        <Text>Footer</Text>
+
       </View>
     </View>
   );
 }
-
-function Selected() {}
 
 const styles = StyleSheet.create({
   container: {
@@ -159,6 +151,6 @@ const mapToStateProps = (state: ApplicationState) => ({
   userReducer: state.UserReducer
 })
 
-const LoadingScreen = connect(mapToStateProps, {ON_UPDATE_LANGUAGE, ON_UPDATE_EVENT, ON_UPDATE_LOCATION})(_LoadingScreen)
+const LoadingScreen = connect(mapToStateProps, {ON_UPDATE_LANGUAGE, ON_UPDATE_EVENTS, ON_UPDATE_LOCATION})(_LoadingScreen)
 
 export default LoadingScreen

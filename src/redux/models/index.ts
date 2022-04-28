@@ -1,8 +1,9 @@
 import { LocationGeocodedLocation } from "expo-location";
-import { Address } from "react-native-maps";
+
 
 export interface Event {
-  id: String;
+
+  id: any;
 
   name: {
     nameFi: String;
@@ -66,6 +67,6 @@ export interface UserState {
 }
 
 export interface EventsState {
-    events: Event
+    events: {}
 
 }

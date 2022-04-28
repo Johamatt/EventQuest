@@ -17,6 +17,7 @@ import {RootStackParamList} from '../../types'
 
 import { connect } from "react-redux";
 import { ON_UPDATE_LOCATION,ON_UPDATE_LANGUAGE, UserState, ApplicationState } from "../redux";
+import axios from "axios";
 
 
 const screenWidth = Dimensions.get("screen").width;
@@ -37,12 +38,10 @@ const _LandingScreen: React.FC<LandingProps> = (props) => {
     const [selected, setSelected] = useState(false)
 
 
-    /// if ON_UPDATE_LANGUAGE != ''   => next
 
   return (
     <View style={styles.container}>
       <View style={styles.navigation}>
-        <Text>Navigation</Text>
       </View>
 
       <View style={styles.body}>
@@ -52,7 +51,6 @@ const _LandingScreen: React.FC<LandingProps> = (props) => {
   
         ></Image>
 
-        <Text>Select languange</Text>
 
         <View style={styles.flagcontainer}>
           <TouchableOpacity 
@@ -106,14 +104,12 @@ const _LandingScreen: React.FC<LandingProps> = (props) => {
         accessibilityLabel="Learn more about this purple button"
       />
 
-      <View style={styles.footer}>
-        <Text>Footer</Text>
-      </View>
+      <View style={styles.footer}></View>
     </View>
   );
 }
 
-function Selected() {}
+
 
 const styles = StyleSheet.create({
   container: {

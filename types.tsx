@@ -8,3 +8,5 @@ export type MainBottomTabParamList = {
   Home: undefined;
   Map: undefined;
 };
+
+

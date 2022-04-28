@@ -1,20 +1,20 @@
 
-import { EventsAction, eventsAction } from "../actions"
+import { eventsAction } from "../actions"
 import { EventsState, Event } from "../models"
 
 
 const initialState = {
-    events: {} as Event
+    events: {} 
 }
 
 
-const eventsReducer = (state: EventsState = initialState, action: EventsAction) => {
+const eventsReducer = (state: EventsState = initialState, action: eventsAction) => {
 
     switch(action.type) {
-        case 'ON_UPDATE_EVENT':
+        case 'ON_UPDATE_EVENTS':
         return {
             ...state,
-            event: action.payload
+            events: action.payload
         }
 
         default:
