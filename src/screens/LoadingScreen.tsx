@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 
 import BeatLoader from "react-spinners/BeatLoader";
 
 import * as Location from "expo-location";
 
 import { connect } from "react-redux";
-import { ON_UPDATE_LOCATION, ON_UPDATE_LANGUAGE, ON_UPDATE_EVENTS, UserState, ApplicationState } from "../redux";
+import {
+  ON_UPDATE_LOCATION,
+  ON_UPDATE_LANGUAGE,
+  ON_UPDATE_ALL_EVENTS,
+  UserState,
+  ApplicationState,
+  EventsState,
+} from "../redux";
 
 const screenWidth = Dimensions.get("screen").width;
-
 
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
-
-
+import { userReducer } from "../redux/reducers/userReducer";
 
 type LoadingScreenProp = StackNavigationProp<
   RootStackParamList,
@@ -30,36 +29,45 @@ type LoadingScreenProp = StackNavigationProp<
 >;
 
 interface LoadingProps {
-  userReducer: UserState,
-  ON_UPDATE_LOCATION: Function,
-  ON_UPDATE_EVENTS: Function
-  
+  userReducer: UserState;
+  eventReducer: EventsState;
+  ON_UPDATE_LOCATION: Function;
+  ON_UPDATE_ALL_EVENTS: Function;
 }
-
-
-
 
 const _LoadingScreen: React.FC<LoadingProps> = (props) => {
   const navigation = useNavigation<LoadingScreenProp>();
   const [errorMsg, setErrorMsg] = useState("");
   const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
 
+  console.log(props.userReducer);
 
+  console.log(props);
 
-  const { ON_UPDATE_LOCATION, ON_UPDATE_EVENTS} = props
+  const { ON_UPDATE_LOCATION, ON_UPDATE_ALL_EVENTS } = props;
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+      if (
+        props.userReducer.location.latitude === undefined ||
+        props.userReducer.location.longitude === undefined
+      ) {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+        let location: any = await Location.getCurrentPositionAsync({});
+        setLocation(location.coords);
+        await ON_UPDATE_LOCATION(location.coords);
       }
-      let location: any = await Location.getCurrentPositionAsync({});
-      setLocation(location);
 
-      await ON_UPDATE_LOCATION(location)
-      await ON_UPDATE_EVENTS()
+      if (props.eventReducer === undefined) {
+        await ON_UPDATE_ALL_EVENTS();
+      }
+
+      
+
 
       setTimeout(() => {
         navigation.navigate("Main");
@@ -76,9 +84,7 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navigation}>
-
-      </View>
+      <View style={styles.navigation}></View>
 
       <View style={styles.body}>
         <Image
@@ -87,18 +93,15 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
         ></Image>
 
         <Text> {text}</Text>
-         <BeatLoader color={"#008080"} loading={true} css={""} size={34} /> 
-         {/* ^glitch */}
-        <View style={styles.flagcontainer}>
-        </View>
+        {/* <BeatLoader color={"#008080"} loading={true} css={""} size={34} />  */}
+        {/* ^glitch */}
+        <View style={styles.flagcontainer}></View>
       </View>
 
-      <View style={styles.footer}>
-
-      </View>
+      <View style={styles.footer}></View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -148,9 +151,13 @@ const styles = StyleSheet.create({
 });
 
 const mapToStateProps = (state: ApplicationState) => ({
-  userReducer: state.UserReducer
-})
+  userReducer: state.UserReducer,
+});
 
-const LoadingScreen = connect(mapToStateProps, {ON_UPDATE_LANGUAGE, ON_UPDATE_EVENTS, ON_UPDATE_LOCATION})(_LoadingScreen)
+const LoadingScreen = connect(mapToStateProps, {
+  ON_UPDATE_LANGUAGE,
+  ON_UPDATE_ALL_EVENTS,
+  ON_UPDATE_LOCATION,
+})(_LoadingScreen);
 
-export default LoadingScreen
+export default LoadingScreen;

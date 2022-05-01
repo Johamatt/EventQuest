@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import {
   ON_UPDATE_LOCATION,
   ON_UPDATE_LANGUAGE,
-  ON_UPDATE_EVENTS,
+  ON_UPDATE_ALL_EVENTS,
   UserState,
 } from "../redux";
 
@@ -30,14 +30,14 @@ import { Event } from "../redux/models";
 interface HomeProps {
   userReducer: UserState;
   eventReducer: EventsState;
-  ON_UPDATE_EVENTS: Function;
+  ON_UPDATE_ALL_EVENTS: Function;
 }
 type mainScreenProp = StackNavigationProp<RootStackParamList, 'Main'>;
+
 
 export const _HomeScreen: React.FC<HomeProps> = (props) => {
   const { location, language } = props.userReducer;
   const navigation = useNavigation<mainScreenProp>();
-
 
   
   let events: Array<Event> = props.eventReducer.events.sort(
@@ -45,14 +45,15 @@ export const _HomeScreen: React.FC<HomeProps> = (props) => {
       a: { event_dates: { starting_day: string } },
       b: { event_dates: { starting_day: string } }
     ) => (a.event_dates.starting_day < b.event_dates.starting_day ? -1 : 1)
-  );
+  )
 
-  console.log(events)
 
   const Item = ({ eventInfo }: { eventInfo: Event }) => (
     <View style={styles.item}>
         <TouchableOpacity onPress={() => {navigation.navigate("EventModal", {event: eventInfo})}}>   
-        <Text style={styles.date}>{moment(eventInfo.event_dates.starting_day).format("YYYY-MM-DD HH:mm:ss")}</Text>
+        <Text style={styles.date}>{moment(eventInfo.event_dates.starting_day).format("DD-MM-YYYY || HH:mm")}
+        
+        </Text>
         <Text style={styles.title}> {eventInfo.name.fi}</Text>
         {/* fi,en,sv,zh? : ( )           ^     */}
       </TouchableOpacity>
@@ -69,8 +70,8 @@ export const _HomeScreen: React.FC<HomeProps> = (props) => {
         <AntDesign name="filter" size={32} color="black" />
       </TouchableOpacity>
 
-      <Text>Home Screen{JSON.stringify(location)}</Text>
-      <Text>{language}</Text>
+      {/* <Text>Home Screen{JSON.stringify(location)}</Text>
+      <Text>{language}</Text> */}
       <FlatList<Event>
         data={events}
         renderItem={renderItem}
@@ -85,7 +86,7 @@ const mapToStateProps = (state: ApplicationState) => ({
   eventReducer: state.EventsReducer,
 });
 
-const HomeScreen = connect(mapToStateProps, { ON_UPDATE_EVENTS })(_HomeScreen);
+const HomeScreen = connect(mapToStateProps, { ON_UPDATE_ALL_EVENTS })(_HomeScreen);
 
 export default HomeScreen;
 

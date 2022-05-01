@@ -26,10 +26,19 @@ export default function EventModal({
         <View />
       )}
       <Text style={{ fontSize: 30 }}>{event.name.fi}</Text>
+
       <Text style={{ fontSize: 25 }}>
-        {moment(event.event_dates.starting_day).format("YYYY-MM-DD HH:mm:ss")} -{" "}
-        {moment(event.event_dates.ending_day).format("YYYY-MM-DD HH:mm:ss")}
+        {moment(event.event_dates.starting_day).format("HH:mm")} -{" "}
+        {moment(event.event_dates.ending_day).format("HH:mm")}
       </Text>
+
+      <Text style={{ fontSize: 12 }}>
+        {moment(event.event_dates.starting_day).format("DD-MM-YYYY")} -{" "}
+        {moment(event.event_dates.ending_day).format("DD-MM-YYYY")}
+      </Text>
+
+
+
       <Text style={{ fontSize: 15 }}>{event.description.intro}</Text>
 
       <Button onPress={() => navigation.goBack()} title="Dismiss" />

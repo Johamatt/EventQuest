@@ -3,7 +3,6 @@ import { MomentInput } from "moment";
 
 
 export interface Event {
-
   id: any;
 
   name: {
@@ -48,7 +47,6 @@ export interface Event {
             }
         ]
     }
-
     tags?: {
         tag: [id: Number, name: String]
     }
@@ -59,6 +57,17 @@ export interface Event {
     additional_description: any
   };
 }
+
+export interface FilterConditions {
+    startDate: Date,
+    endDate: Date,
+    languages: [],
+
+    //todo tags: []
+}
+
+
+
 
 
 export interface UserState {

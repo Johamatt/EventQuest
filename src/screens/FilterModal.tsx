@@ -1,48 +1,106 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button,Text} from "react-native";
+import { View, StyleSheet, Button, Text } from "react-native";
 import Slider from "@react-native-community/slider";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
+import { FilterConditions } from "../redux";
 
 export default function FilterModal({ navigation }: { navigation: any }) {
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
+  const [showStart, setShowStart] = useState(false);
 
-  const onChange = (event:any, selectedDate:any) => {
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
+  const [showEnd, setShowEnd] = useState(false);
+
+  const onStartChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
+    setShowStart(false);
+    setStartDate(currentDate);
   };
 
-  const showMode = (currentMode:any) => {
-    setShow(true);
-    setMode(currentMode);
+  const showStartMode = (currentMode: any) => {
+    setShowStart(true);
   };
 
-  const showDatepicker = () => {
-    showMode("date");
+  const showStartDatepicker = () => {
+    showStartMode("date");
+  };
+
+  const onEndChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    setShowEnd(false);
+    setEndDate(currentDate);
+  };
+
+  const showEndMode = (currentMode: any) => {
+    setShowEnd(true);
+  };
+
+  const showEndDatepicker = () => {
+    showEndMode("date");
   };
 
   return (
     <View style={styles.container}>
-      <Slider
+
+      {/* <Slider
         style={{ width: 200, height: 40 }}
         minimumValue={0}
         maximumValue={15}
         minimumTrackTintColor="#EEEEEE"
         maximumTrackTintColor="#000000"
-      />
-       <Button onPress={showDatepicker} title="Show date picker!" />
-       <Text>selected: {date.toLocaleString()}</Text>
-       {show && (
+      /> */}
+      <Button onPress={showStartDatepicker} title="Starting day" />
+      {startDate !== undefined ? (
+        <Text>selected Start: {moment(startDate).format("DD-MM-YYYY")}</Text>
+      ) : (
+        setStartDate(new Date(new Date().setHours(0, 0, 0, 0)))
+      )}
+      {showStart && (
         <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
+
+          minimumDate={new Date()}
+          value={startDate}
+          mode="date"
+          display="spinner"
           is24Hour={true}
-          onChange={onChange}
+          onChange={onStartChange}
         />
       )}
+      <Text/>
+      <Text/>
+      <Button onPress={showEndDatepicker} title="Ending day" />
+      
+      {endDate !== undefined ? (
+        <Text>selected End: {moment(endDate).format("DD-MM-YYYY")}</Text>
+      ) : (
+        setEndDate(new Date(new Date().setHours(0, 0, 0, 0)))
+      )}
+      {showEnd && (
+        <DateTimePicker
+       
+          minimumDate={startDate}
+          value={endDate}
+          mode="date"
+          display="spinner"
+          is24Hour={true}
+          onChange={onEndChange}
+        />
+      )}
+
+
+
+      <Button onPress={() => navigation.goBack()} title="cancel"/>
+
+      {/* <Button onPress={navigation.push("LoadingScreen"), ON_UPDATE_LANGUAGE(language)} title="next"/> */}
+
+
+
+
 
     </View>
   );
