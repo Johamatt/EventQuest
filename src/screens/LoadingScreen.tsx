@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-
 import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
-
-import BeatLoader from "react-spinners/BeatLoader";
-
 import * as Location from "expo-location";
-
 import { connect } from "react-redux";
 import {
   ON_UPDATE_LOCATION,
@@ -16,12 +11,9 @@ import {
   EventsState,
 } from "../redux";
 
-const screenWidth = Dimensions.get("screen").width;
-
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
-import { userReducer } from "../redux/reducers/userReducer";
 
 type LoadingScreenProp = StackNavigationProp<
   RootStackParamList,
@@ -39,10 +31,6 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
   const navigation = useNavigation<LoadingScreenProp>();
   const [errorMsg, setErrorMsg] = useState("");
   const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
-
-  console.log(props.userReducer);
-
-  console.log(props);
 
   const { ON_UPDATE_LOCATION, ON_UPDATE_ALL_EVENTS } = props;
 
@@ -66,9 +54,6 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
         await ON_UPDATE_ALL_EVENTS();
       }
 
-      
-
-
       setTimeout(() => {
         navigation.navigate("Main");
       }, 2000);
@@ -85,23 +70,30 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.navigation}></View>
-
       <View style={styles.body}>
         <Image
           source={require("../Images/EventQuest-logos_black.png")}
           style={styles.splashIcon}
         ></Image>
-
         <Text> {text}</Text>
-        {/* <BeatLoader color={"#008080"} loading={true} css={""} size={34} />  */}
-        {/* ^glitch */}
         <View style={styles.flagcontainer}></View>
       </View>
-
       <View style={styles.footer}></View>
     </View>
   );
 };
+
+const mapToStateProps = (state: ApplicationState) => ({
+  userReducer: state.UserReducer,
+});
+
+const LoadingScreen = connect(mapToStateProps, {
+  ON_UPDATE_LANGUAGE,
+  ON_UPDATE_ALL_EVENTS,
+  ON_UPDATE_LOCATION,
+})(_LoadingScreen);
+
+export default LoadingScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -112,7 +104,7 @@ const styles = StyleSheet.create({
   flagcontainer: {
     display: "flex",
 
-    width: screenWidth,
+    width: Dimensions.get("screen").width,
     flexWrap: "wrap",
     flexDirection: "row",
 
@@ -127,9 +119,8 @@ const styles = StyleSheet.create({
   splashIcon: {
     width: 200,
     height: 200,
-
-    top: 0, //
-    position: "absolute", //
+    top: 0, 
+    position: "absolute", 
   },
 
   flagIcon: {
@@ -149,15 +140,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-const mapToStateProps = (state: ApplicationState) => ({
-  userReducer: state.UserReducer,
-});
-
-const LoadingScreen = connect(mapToStateProps, {
-  ON_UPDATE_LANGUAGE,
-  ON_UPDATE_ALL_EVENTS,
-  ON_UPDATE_LOCATION,
-})(_LoadingScreen);
-
-export default LoadingScreen;

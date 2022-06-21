@@ -1,11 +1,11 @@
 
 import { EventsAction } from "../actions"
-import { EventsState, Event } from "../models"
+import { EventsState } from "../models"
 
 
 const initialState = {
     events: {},
-    // filteredevents: {}
+    filteredevents: {}
 }
 
 
@@ -17,11 +17,11 @@ const eventsReducer = (state: EventsState = initialState, action: EventsAction) 
             ...state,
             events: action.payload
         }
-        // case 'ON_EVENT_FILTER':
-        //     return {
-        //         ...state,
-        //         filteredevents: action.payload
-        //     }
+        case 'ON_EVENT_FILTER':
+            return {
+                ...state,
+                filteredevents: action.payload
+            }
 
         default:
             return state

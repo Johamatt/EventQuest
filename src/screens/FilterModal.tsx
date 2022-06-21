@@ -1,110 +1,124 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Button, Text } from "react-native";
-import Slider from "@react-native-community/slider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
-import { FilterConditions } from "../redux";
+import {
+  ApplicationState,
+  EventsState,
+  Filter,
+  ON_EVENT_FILTER,
+  ON_UPDATE_ALL_EVENTS,
+  UserState,
+} from "../redux";
+import { RootStackParamList } from "../../types";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { connect } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
-export default function FilterModal({ navigation }: { navigation: any }) {
-  const [startDate, setStartDate] = useState(
-    new Date(new Date().setHours(0, 0, 0, 0))
-  );
+interface FilterProps {
+  userReducer: UserState;
+  eventReducer: EventsState;
+  ON_UPDATE_ALL_EVENTS: Function;
+  ON_EVENT_FILTER: Function;
+}
+
+type mainScreenProp = StackNavigationProp<RootStackParamList, "Main">;
+
+export const _FilterModal: React.FC<FilterProps> = (props) => {
+  const [filterOptions, setFilterOptions] = useState<Filter>({
+    endDate: new Date(new Date().setHours(0, 0, 0, 0)),
+    startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+  });
+
+  const navigation = useNavigation<mainScreenProp>();
+  const [showEnd, setShowEnd] = useState(false);
   const [showStart, setShowStart] = useState(false);
 
-  const [endDate, setEndDate] = useState(
-    new Date(new Date().setHours(0, 0, 0, 0))
-  );
-  const [showEnd, setShowEnd] = useState(false);
-
   const onStartChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
     setShowStart(false);
-    setStartDate(currentDate);
+    setFilterOptions({ ...filterOptions, startDate: selectedDate });
+  };
+
+  const onEndChange = (event: any, selectedDate: any) => {
+    setShowEnd(false);
+    setFilterOptions({ ...filterOptions, endDate: selectedDate });
   };
 
   const showStartMode = (currentMode: any) => {
     setShowStart(true);
   };
 
-  const showStartDatepicker = () => {
-    showStartMode("date");
-  };
-
-  const onEndChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    setShowEnd(false);
-    setEndDate(currentDate);
-  };
-
   const showEndMode = (currentMode: any) => {
     setShowEnd(true);
   };
 
-  const showEndDatepicker = () => {
-    showEndMode("date");
-  };
+
+
 
   return (
     <View style={styles.container}>
-
-      {/* <Slider
-        style={{ width: 200, height: 40 }}
-        minimumValue={0}
-        maximumValue={15}
-        minimumTrackTintColor="#EEEEEE"
-        maximumTrackTintColor="#000000"
-      /> */}
-      <Button onPress={showStartDatepicker} title="Starting day" />
-      {startDate !== undefined ? (
-        <Text>selected Start: {moment(startDate).format("DD-MM-YYYY")}</Text>
+      <Button onPress={() => showStartMode("date")} title="Starting day" />
+      {filterOptions.endDate !== undefined ? (
+        <Text>
+          selected Start: {moment(filterOptions.startDate).format("DD-MM-YYYY")}
+        </Text>
       ) : (
-        setStartDate(new Date(new Date().setHours(0, 0, 0, 0)))
+        setFilterOptions({
+          ...filterOptions,
+          startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+        })
       )}
       {showStart && (
         <DateTimePicker
-
           minimumDate={new Date()}
-          value={startDate}
+          maximumDate={filterOptions.endDate}
+          value={filterOptions.startDate}
           mode="date"
           display="spinner"
           is24Hour={true}
           onChange={onStartChange}
         />
       )}
-      <Text/>
-      <Text/>
-      <Button onPress={showEndDatepicker} title="Ending day" />
-      
-      {endDate !== undefined ? (
-        <Text>selected End: {moment(endDate).format("DD-MM-YYYY")}</Text>
+      <Button onPress={() => showEndMode("date")} title="Ending day" />
+
+      {filterOptions.endDate !== undefined ? (
+        <Text>
+          selected End: {moment(filterOptions.endDate).format("DD-MM-YYYY")}
+        </Text>
       ) : (
-        setEndDate(new Date(new Date().setHours(0, 0, 0, 0)))
+        setFilterOptions({
+          ...filterOptions,
+          endDate: new Date(new Date().setHours(0, 0, 0, 0)),
+        })
       )}
       {showEnd && (
         <DateTimePicker
-       
-          minimumDate={startDate}
-          value={endDate}
+          minimumDate={filterOptions.startDate}
+          value={filterOptions.endDate}
           mode="date"
           display="spinner"
           is24Hour={true}
           onChange={onEndChange}
         />
       )}
+      <Button onPress={() => navigation.goBack()} title="Cancel" />
 
-
-
-      <Button onPress={() => navigation.goBack()} title="cancel"/>
-
-      {/* <Button onPress={navigation.push("LoadingScreen"), ON_UPDATE_LANGUAGE(language)} title="next"/> */}
-
-
-
-
-
+      <Button   onPress={() => {navigation.push("LoadingScreen"), ON_EVENT_FILTER(filterOptions, props.eventReducer.events)}} title="next" />
     </View>
   );
-}
+};
+
+const mapToStateProps = (state: ApplicationState) => ({
+  userReducer: state.UserReducer,
+  eventReducer: state.EventsReducer,
+});
+
+const FilterModal = connect(mapToStateProps, {
+  ON_UPDATE_ALL_EVENTS,
+  ON_EVENT_FILTER,
+})(_FilterModal);
+
+export default FilterModal;
 
 const styles = StyleSheet.create({
   container: {
