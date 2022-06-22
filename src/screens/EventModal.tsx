@@ -10,7 +10,6 @@ export default function EventModal({
   navigation: any;
   route: any;
 }) {
-
   const event: Event = route.params.event;
 
   return (
@@ -36,8 +35,6 @@ export default function EventModal({
         {moment(event.event_dates.starting_day).format("DD-MM-YYYY")} -{" "}
         {moment(event.event_dates.ending_day).format("DD-MM-YYYY")}
       </Text>
-
-
 
       <Text style={{ fontSize: 15 }}>{event.description.intro}</Text>
 

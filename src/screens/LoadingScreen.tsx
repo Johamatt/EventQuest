@@ -9,6 +9,7 @@ import {
   UserState,
   ApplicationState,
   EventsState,
+  ON_EVENT_FILTER,
 } from "../redux";
 
 import { useNavigation } from "@react-navigation/native";
@@ -28,6 +29,7 @@ interface LoadingProps {
 }
 
 const _LoadingScreen: React.FC<LoadingProps> = (props) => {
+
   const navigation = useNavigation<LoadingScreenProp>();
   const [errorMsg, setErrorMsg] = useState("");
   const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
@@ -53,6 +55,7 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
       if (props.eventReducer === undefined) {
         await ON_UPDATE_ALL_EVENTS();
       }
+
 
       setTimeout(() => {
         navigation.navigate("Main");

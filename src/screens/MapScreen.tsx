@@ -31,6 +31,10 @@ export const _MapScreen: React.FC<MapProps> = (props) => {
   const navigation = useNavigation<mainScreenProp>();
 
 
+  React.useEffect(() => {
+    console.log(props.eventReducer.filteredEvents)
+    
+  }, []);
 
   return (
     <View style={styles.container}>

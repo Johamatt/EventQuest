@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -11,43 +11,60 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
-import { ApplicationState, EventsState } from "../redux";
+import { ApplicationState, EventsState, ON_EVENT_FILTER, ON_UPDATE_ALL_EVENTS } from "../redux";
 import { connect } from "react-redux";
-import {
-  UserState,
-} from "../redux";
+import { UserState } from "../redux";
 
 import moment from "moment";
 import { Event } from "../redux/models";
+import { eventsReducer } from "../redux/reducers/eventsReducer";
 
 interface HomeProps {
   userReducer: UserState;
   eventReducer: EventsState;
 }
 
-type mainScreenProp = StackNavigationProp<RootStackParamList, 'Main'>;
+type mainScreenProp = StackNavigationProp<RootStackParamList, "Main">;
 
 export const _HomeScreen: React.FC<HomeProps> = (props) => {
+
+
+  useEffect(() => {
+    console.log(props.eventReducer.filteredEvents)
+    
+  }, []);
+
+
+
+
   const { location, language } = props.userReducer;
   const navigation = useNavigation<mainScreenProp>();
 
-  
-  let events: Array<Event> = props.eventReducer.events.sort( 
-    (
-      a: { event_dates: { starting_day: string } },
-      b: { event_dates: { starting_day: string } }
-    ) => (a.event_dates.starting_day < b.event_dates.starting_day ? -1 : 1)
-  )
+
+
+ 
+
+
+  let events: Array<Event> = props.eventReducer.events.sort((
+    (objA:any, objB:any) => objA.event_dates.starting_day < objB.event_dates.starting_day ? -1 : 1
+  ))
+
 
   const Item = ({ eventInfo }: { eventInfo: Event }) => (
     <View style={styles.item}>
-        <TouchableOpacity onPress={() => {navigation.navigate("EventModal", {event: eventInfo})}}>   
-        <Text style={styles.date}>{moment(eventInfo.event_dates.starting_day).format("DD-MM-YYYY || HH:mm")}
-        
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("EventModal", { event: eventInfo });
+        }}
+      >
+        <Text style={styles.date}>
+          {moment(eventInfo.event_dates.starting_day).format(
+            "DD-MM-YYYY || HH:mm"
+          )}
         </Text>
         <Text style={styles.title}> {eventInfo.name.fi}</Text>
         {/* fi,en,sv,zh? : ( )           ^     */}
-      </TouchableOpacity>    
+      </TouchableOpacity>
     </View>
   );
 
@@ -55,7 +72,11 @@ export const _HomeScreen: React.FC<HomeProps> = (props) => {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <TouchableOpacity onPress={() =>{navigation.navigate("FilterModal")}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("FilterModal");
+        }}
+      >
         <Text>Filter list</Text>
         <AntDesign name="filter" size={32} color="black" />
       </TouchableOpacity>
@@ -76,7 +97,10 @@ const mapToStateProps = (state: ApplicationState) => ({
   eventReducer: state.EventsReducer,
 });
 
-const HomeScreen = connect(mapToStateProps)(_HomeScreen);
+const HomeScreen = connect(mapToStateProps, {
+  ON_UPDATE_ALL_EVENTS,
+  ON_EVENT_FILTER,
+})(_HomeScreen);
 
 export default HomeScreen;
 

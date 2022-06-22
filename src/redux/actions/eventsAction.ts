@@ -25,14 +25,30 @@ export type EventsAction =
   | EventErrorAction
   | EventsFilterAction;
 
-export const ON_EVENT_FILTER = (Filter: Filter, Eventlist: any) => {
+export const ON_EVENT_FILTER = (filteredEvents: Filter, events: Array<Event>) => {
+
   return async (dispatch: Dispatch<EventsAction>) => {
-    console.log(Filter);
+    try {
+      // let filteredEvents: Array<Event> = eventlist.filter(
+      //   (a: { event_dates: { starting_day: string } }) =>
+      //     a.event_dates.starting_day > moment(filter.startDate).toISOString()
+      // );
+
+      
+      dispatch({
+        type: "ON_EVENT_FILTER", // ???
+        payload: events,  // ???
+      });
+    } catch (error) {
+      dispatch({
+        type: "ON_EVENT_ERROR",
+        payload: error,
+      });
+    }
   };
 };
 
 export const ON_UPDATE_ALL_EVENTS = () => {
-  console.log("hep");
   return async (dispatch: Dispatch<EventsAction>) => {
     try {
       const res = await axios.get("https://open-api.myhelsinki.fi/v1/events/", {

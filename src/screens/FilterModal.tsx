@@ -52,9 +52,6 @@ export const _FilterModal: React.FC<FilterProps> = (props) => {
     setShowEnd(true);
   };
 
-
-
-
   return (
     <View style={styles.container}>
       <Button onPress={() => showStartMode("date")} title="Starting day" />
@@ -103,9 +100,14 @@ export const _FilterModal: React.FC<FilterProps> = (props) => {
       )}
       <Button onPress={() => navigation.goBack()} title="Cancel" />
 
-      <Button   onPress={() => {navigation.push("LoadingScreen"), ON_EVENT_FILTER(filterOptions, props.eventReducer.events)}} title="next" />
+      <Button onPress={() => loadEvents()} title="next" />
     </View>
   );
+
+  function loadEvents() {
+    ON_EVENT_FILTER(filterOptions, props.eventReducer.events);
+  
+  }
 };
 
 const mapToStateProps = (state: ApplicationState) => ({

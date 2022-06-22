@@ -1,9 +1,7 @@
 import { LocationGeocodedLocation } from "expo-location";
 import { Dispatch } from "react";
 
-import AsyncStorage from '@react-native-async-storage/async-storage' // tallentaa laitteelle..
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage' // 
 
 export interface UpdateLocationAction {
     readonly type: 'ON_UPDATE_LOCATION',
@@ -27,8 +25,6 @@ export const ON_UPDATE_LANGUAGE = (language: String) => {
         try {
          
             await AsyncStorage.setItem("user_language", JSON.stringify(language))
-            //save location to store
-
             dispatch({
                 type: 'ON_UPDATE_LANGUAGE',
                 payload: language
@@ -46,7 +42,6 @@ export const ON_UPDATE_LANGUAGE = (language: String) => {
 export const ON_UPDATE_LOCATION = (location: LocationGeocodedLocation) => {
     return async (dispatch: Dispatch<UserAction>) => {
         try {
-            //save location to store
             dispatch({
                 type: 'ON_UPDATE_LOCATION',
                 payload: location
