@@ -11,13 +11,12 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
-import { ApplicationState, EventsState, ON_EVENT_FILTER, ON_UPDATE_ALL_EVENTS } from "../redux";
+import { ApplicationState, EventsState,} from "../redux";
 import { connect } from "react-redux";
 import { UserState } from "../redux";
 
 import moment from "moment";
 import { Event } from "../redux/models";
-import { eventsReducer } from "../redux/reducers/eventsReducer";
 
 interface HomeProps {
   userReducer: UserState;
@@ -25,25 +24,14 @@ interface HomeProps {
 }
 
 type mainScreenProp = StackNavigationProp<RootStackParamList, "Main">;
-
 export const _HomeScreen: React.FC<HomeProps> = (props) => {
 
 
   useEffect(() => {
-    console.log(props.eventReducer.filteredEvents)
-    
+    console.log(props.eventReducer.filteredEvents)   
   }, []);
 
-
-
-
-  const { location, language } = props.userReducer;
   const navigation = useNavigation<mainScreenProp>();
-
-
-
- 
-
 
   let events: Array<Event> = props.eventReducer.events.sort((
     (objA:any, objB:any) => objA.event_dates.starting_day < objB.event_dates.starting_day ? -1 : 1
@@ -97,10 +85,7 @@ const mapToStateProps = (state: ApplicationState) => ({
   eventReducer: state.EventsReducer,
 });
 
-const HomeScreen = connect(mapToStateProps, {
-  ON_UPDATE_ALL_EVENTS,
-  ON_EVENT_FILTER,
-})(_HomeScreen);
+const HomeScreen = connect(mapToStateProps)(_HomeScreen);
 
 export default HomeScreen;
 

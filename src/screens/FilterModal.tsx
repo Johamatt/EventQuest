@@ -105,8 +105,9 @@ export const _FilterModal: React.FC<FilterProps> = (props) => {
   );
 
   function loadEvents() {
-    ON_EVENT_FILTER(filterOptions, props.eventReducer.events);
-  
+    ON_EVENT_FILTER(filterOptions, props.eventReducer.events);    
+
+    
   }
 };
 

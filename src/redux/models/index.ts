@@ -53,7 +53,7 @@ export interface Event {
 export interface Filter {
   startDate: Date;
   endDate: Date;
-  //todo languages: [];
+  //todo   languages: [];
   //todo tags: []
 }
 
@@ -64,6 +64,7 @@ export interface UserState {
 }
 
 export interface EventsState {
+  [x: string]: any;
   events: Array<Event>;
   filteredEvents: Array<Event>;
 }

@@ -25,7 +25,10 @@ export type EventsAction =
   | EventErrorAction
   | EventsFilterAction;
 
-export const ON_EVENT_FILTER = (filteredEvents: Filter, events: Array<Event>) => {
+export const ON_EVENT_FILTER = (filter: Filter, filteredEvents: Array<Event>) => {
+
+
+  
 
   return async (dispatch: Dispatch<EventsAction>) => {
     try {
@@ -37,7 +40,7 @@ export const ON_EVENT_FILTER = (filteredEvents: Filter, events: Array<Event>) =>
       
       dispatch({
         type: "ON_EVENT_FILTER", // ???
-        payload: events,  // ???
+        payload: filteredEvents,  // ???
       });
     } catch (error) {
       dispatch({

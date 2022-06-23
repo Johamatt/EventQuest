@@ -31,44 +31,41 @@ interface LoadingProps {
 const _LoadingScreen: React.FC<LoadingProps> = (props) => {
 
   const navigation = useNavigation<LoadingScreenProp>();
-  const [errorMsg, setErrorMsg] = useState("");
-  const [location, setLocation] = useState<Location.LocationGeocodedLocation>();
-
   const { ON_UPDATE_LOCATION, ON_UPDATE_ALL_EVENTS } = props;
+  const [infoText, setInfoText] = useState("")
 
   useEffect(() => {
     (async () => {
-      if (
-        props.userReducer.location.latitude === undefined ||
-        props.userReducer.location.longitude === undefined
-      ) {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
-        }
-        let location: any = await Location.getCurrentPositionAsync({});
-        setLocation(location.coords);
-        await ON_UPDATE_LOCATION(location.coords);
+      if (props.userReducer.location.latitude === undefined) {
+        setInfoText("Waiting for location permission..")
+        locationRequest();
       }
 
       if (props.eventReducer === undefined) {
+        setInfoText("Loading...")
         await ON_UPDATE_ALL_EVENTS();
       }
 
-
       setTimeout(() => {
         navigation.navigate("Main");
-      }, 2000);
+      }, 1200);
     })();
   }, []);
 
-  let text = "Waiting for location permission..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = "Loading...";
+
+
+  async function locationRequest() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setInfoText("Permission to access location was denied");
+      return;
+    }
+    let location: any = await Location.getCurrentPositionAsync({});
+    await ON_UPDATE_LOCATION(location.coords);
   }
+
+
+
 
   return (
     <View style={styles.container}>
@@ -78,7 +75,7 @@ const _LoadingScreen: React.FC<LoadingProps> = (props) => {
           source={require("../Images/EventQuest-logos_black.png")}
           style={styles.splashIcon}
         ></Image>
-        <Text> {text}</Text>
+        <Text> {infoText}</Text>
         <View style={styles.flagcontainer}></View>
       </View>
       <View style={styles.footer}></View>
